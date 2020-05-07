@@ -6,29 +6,23 @@
 // Sets default values
 ATank::ATank()
 {
- 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = false;
 
+	Hull = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Hull"));
+	Hull->SetSimulatePhysics(true);
+	Hull->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	Hull->SetCollisionObjectType(ECollisionChannel::ECC_Vehicle);
+	RootComponent = Hull;
+
+	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
+	SpringArm->AttachToComponent(Hull, FAttachmentTransformRules::KeepRelativeTransform, TEXT("Socket_Turret"));
+	SpringArm->SetRelativeRotation(FRotator(-20.0f, 0.0f, 0.0f));
+	SpringArm->TargetArmLength = 1000.0f;
+	SpringArm->bInheritPitch = false;
+	SpringArm->bInheritYaw = false;
+	SpringArm->bInheritRoll = false;
+
+	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+	Camera->AttachToComponent(SpringArm, FAttachmentTransformRules::KeepRelativeTransform);
 }
-
-// Called when the game starts or when spawned
-void ATank::BeginPlay()
-{
-	Super::BeginPlay();
-	
-}
-
-// Called every frame
-void ATank::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
-// Called to bind functionality to input
-void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-}
-

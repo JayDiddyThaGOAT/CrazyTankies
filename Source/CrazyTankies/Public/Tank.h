@@ -3,9 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Pawn.h"
+#include "Camera/CameraComponent.h"
 #include "Components/SkeletalMeshComponent.h"
-#include "Components/StaticMeshComponent.h"
+#include "GameFramework/Pawn.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "Tank.generated.h"
 
 UCLASS()
@@ -18,14 +19,13 @@ public:
 	ATank();
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+	class USkeletalMeshComponent* Hull;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+	class UCameraComponent* Camera;
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
+public:
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+	class USpringArmComponent* SpringArm;
 };
