@@ -28,10 +28,14 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupInputComponent() override;
 
-protected:
-	class ATank* Tank;
-
 private:
 	void AimHorizontally(float Val);
 	void AimVertically(float Val);
+	void Steer(float Torque);
+	void Drive(float Torque);
+	void Brake();
+	void Unbrake();
+
+protected:
+	class ATank* Tank;
 };

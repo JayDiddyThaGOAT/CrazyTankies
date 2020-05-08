@@ -11,11 +11,18 @@ ATank::ATank()
 
 	Hull = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Hull"));
 	Hull->SetSimulatePhysics(true);
-	Hull->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	Hull->SetCollisionObjectType(ECollisionChannel::ECC_Vehicle);
+	Hull->SetCollisionProfileName(TEXT("Vehicle"));
 	RootComponent = Hull;
 
-	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
+	LeftTrack = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("LeftTrack"));
+	LeftTrack->AttachToComponent(Hull, FAttachmentTransformRules::KeepRelativeTransform, TEXT("Socket_Track_l"));
+	LeftTrack->SetCollisionProfileName(TEXT("Default"));
+
+	RightTrack = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RightTrack"));
+	RightTrack->AttachToComponent(Hull, FAttachmentTransformRules::KeepRelativeTransform, TEXT("Socket_Track_r"));
+	RightTrack->SetCollisionProfileName(TEXT("Default"));
+
+	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArm->AttachToComponent(Hull, FAttachmentTransformRules::KeepRelativeTransform, TEXT("Socket_Turret"));
 	SpringArm->SetRelativeRotation(FRotator(-20.0f, 0.0f, 0.0f));
 	SpringArm->TargetArmLength = 1000.0f;
@@ -25,4 +32,6 @@ ATank::ATank()
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->AttachToComponent(SpringArm, FAttachmentTransformRules::KeepRelativeTransform);
+
+	Movement = CreateDefaultSubobject<UTankMovementComponent>(TEXT("TankMovement"));
 }

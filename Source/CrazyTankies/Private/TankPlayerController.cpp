@@ -14,7 +14,7 @@ void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	Tank = Cast<ATank>(AcknowledgedPawn);
+	Tank = Cast<ATank>(GetPawn());
 }
 
 // Called every frame
@@ -27,22 +27,53 @@ void ATankPlayerController::Tick(float DeltaTime)
 // Called to bind functionality to input
 void ATankPlayerController::SetupInputComponent()
 {
-	if (InputComponent == nullptr)
+	Super::SetupInputComponent();
+	if (InputComponent)
 	{
-		InputComponent = NewObject<UInputComponent>(this, TEXT("PC_InputComponent0"));
-		InputComponent->RegisterComponent();
-	}
+		InputComponent->BindAxis(TEXT("AimHorizontal"), this, &ATankPlayerController::AimHorizontally);
+		InputComponent->BindAxis(TEXT("AimVertical"), this, &ATankPlayerController::AimVertically);
+		InputComponent->BindAxis(TEXT("DriveForward"), this, &ATankPlayerController::Drive);
+		InputComponent->BindAxis(TEXT("SteerRight"), this, &ATankPlayerController::Steer);
 
-	InputComponent->BindAxis(TEXT("AimHorizontal"), this, &ATankPlayerController::AimHorizontally);
-	InputComponent->BindAxis(TEXT("AimVertical"), this, &ATankPlayerController::AimVertically);
+		InputComponent->BindAction(TEXT("Brake"), EInputEvent::IE_Pressed, this, &ATankPlayerController::Brake);
+		InputComponent->BindAction(TEXT("Brake"), EInputEvent::IE_Released, this, &ATankPlayerController::Unbrake);
+	}
+	
 }
 
 void ATankPlayerController::AimHorizontally(float Val)
 {
-	Tank->SpringArm->AddWorldRotation(FRotator(0.0f, Val, 0.0f));
+	USpringArmComponent* SpringArm = Tank->FindComponentByClass<USpringArmComponent>();
+	SpringArm->AddWorldRotation(FRotator(0.0f, Val, 0.0f));
 }
 
 void ATankPlayerController::AimVertically(float Val)
 {
-	Tank->SpringArm->AddLocalRotation(FRotator(Val, 0.0f, 0.0f));
+	USpringArmComponent* SpringArm = Tank->FindComponentByClass<USpringArmComponent>();
+	SpringArm->AddLocalRotation(FRotator(Val, 0.0f, 0.0f));
 }
+
+void ATankPlayerController::Brake()
+{
+	UTankMovementComponent* TankMovement = Tank->FindComponentByClass<UTankMovementComponent>();
+	TankMovement->IntendStop();
+}
+
+void ATankPlayerController::Unbrake()
+{
+	UTankMovementComponent* TankMovement = Tank->FindComponentByClass<UTankMovementComponent>();
+	TankMovement->UndoStop();
+}
+
+void ATankPlayerController::Drive(float Torque)
+{
+	UTankMovementComponent* TankMovement = Tank->FindComponentByClass<UTankMovementComponent>();
+	TankMovement->IntendDriveForward(Torque);
+}
+
+void ATankPlayerController::Steer(float Torque)
+{
+	UTankMovementComponent* TankMovement = Tank->FindComponentByClass<UTankMovementComponent>();
+	TankMovement->IntendSteerRight(Torque);
+}
+
