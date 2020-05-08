@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Blueprint/UserWidget.h"
+#include "TankWidget.h"
 #include "GameFramework/PlayerController.h"
 #include "TankPlayerController.generated.h"
 
@@ -37,5 +39,7 @@ private:
 	void Unbrake();
 
 protected:
+	TSubclassOf<class UTankWidget> TankUIClass;
+	class UTankWidget* TankUIWidget;
 	class ATank* Tank;
 };

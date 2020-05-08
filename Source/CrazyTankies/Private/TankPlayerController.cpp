@@ -6,7 +6,8 @@
 
 ATankPlayerController::ATankPlayerController()
 {
-
+	ConstructorHelpers::FClassFinder<UTankWidget> TankUIFinder(TEXT("/Game/Tanks/UI/WBP_Veh_American_Tank"));
+	TankUIClass = TankUIFinder.Class;
 }
 
 // Called when the game starts or when spawned
@@ -15,6 +16,10 @@ void ATankPlayerController::BeginPlay()
 	Super::BeginPlay();
 
 	Tank = Cast<ATank>(GetPawn());
+
+	TankUIWidget = CreateWidget<UTankWidget>(this, TankUIClass);
+	if (TankUIWidget)
+		TankUIWidget->AddToViewport();
 }
 
 // Called every frame

@@ -16,16 +16,16 @@ ATank::ATank()
 
 	LeftTrack = CreateDefaultSubobject<UTankTrack>(TEXT("LeftTrack"));
 	LeftTrack->AttachToComponent(Hull, FAttachmentTransformRules::KeepRelativeTransform, TEXT("Socket_Track_l"));
-	LeftTrack->SetCollisionProfileName(TEXT("Default"));
+	LeftTrack->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
 
 	RightTrack = CreateDefaultSubobject<UTankTrack>(TEXT("RightTrack"));
 	RightTrack->AttachToComponent(Hull, FAttachmentTransformRules::KeepRelativeTransform, TEXT("Socket_Track_r"));
-	RightTrack->SetCollisionProfileName(TEXT("Default"));
+	RightTrack->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArm->AttachToComponent(Hull, FAttachmentTransformRules::KeepRelativeTransform, TEXT("Socket_Turret"));
 	SpringArm->SetRelativeRotation(FRotator(-20.0f, 0.0f, 0.0f));
-	SpringArm->TargetArmLength = 1000.0f;
+	SpringArm->TargetArmLength = 900.0f;
 	SpringArm->bInheritPitch = false;
 	SpringArm->bInheritYaw = false;
 	SpringArm->bInheritRoll = false;
