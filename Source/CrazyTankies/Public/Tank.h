@@ -8,6 +8,7 @@
 #include "GameFramework/Pawn.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "TankMovementComponent.h"
+#include "TankAimingComponent.h"
 #include "TankTrack.h"
 #include "Tank.generated.h"
 

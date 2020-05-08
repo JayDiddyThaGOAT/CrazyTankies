@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS(meta = (BlueprintSpawnableComponent))
+UCLASS(ClassGroup = (Tank), meta = (BlueprintSpawnableComponent))
 class CRAZYTANKIES_API UTankTrack : public UStaticMeshComponent
 {
 	GENERATED_BODY()

@@ -42,4 +42,12 @@ protected:
 	TSubclassOf<class UTankWidget> TankUIClass;
 	class UTankWidget* TankUIWidget;
 	class ATank* Tank;
+
+private:
+	void AimTowardsCrosshair();
+	bool GetSightRayHitLocation(FVector& HitLocation) const;
+	bool GetLookDirection(FVector2D ScreenLocation, FVector& LookDirection) const;
+	bool GetLookVectorHitLocation(FVector LookDirection, FVector& HitLocation) const;
+	float CrossHairLocationX, CrossHairLocationY;
+	float LineTraceRange;
 };

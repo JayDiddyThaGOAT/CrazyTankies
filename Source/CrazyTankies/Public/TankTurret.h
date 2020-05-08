@@ -10,13 +10,26 @@
 /**
  * 
  */
-UCLASS(meta = (BlueprintSpawnableComponent))
+UCLASS(ClassGroup = (Tank), meta = (BlueprintSpawnableComponent))
 class CRAZYTANKIES_API UTankTurret : public USkeletalMeshComponent
 {
 	GENERATED_BODY()
 
 public:
     UTankTurret();
+
+    void RotateTurret(float RelativeSpeed);
+    void ElevateBarrel(float RelativeSpeed);
+
+private:
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+    float MaxDegreesPerSecond;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	float MinElevationDegrees;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	float MaxElevationDegrees;
 
 protected:
     UPROPERTY(Category = Barrel, EditDefaultsOnly, BlueprintReadOnly)

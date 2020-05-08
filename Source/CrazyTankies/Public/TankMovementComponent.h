@@ -10,7 +10,7 @@
 /**
  * Responsible for driving the tanks
  */
-UCLASS(meta = (BlueprintSpawnableComponent))
+UCLASS(ClassGroup = (Tank), meta = (BlueprintSpawnableComponent))
 class CRAZYTANKIES_API UTankMovementComponent : public USimpleWheeledVehicleMovementComponent
 {
 	GENERATED_BODY()

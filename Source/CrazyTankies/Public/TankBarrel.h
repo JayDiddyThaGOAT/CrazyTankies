@@ -9,10 +9,14 @@
 /**
  * 
  */
-UCLASS(meta = (BlueprintSpawnableComponent))
+UCLASS(ClassGroup = (Tank), meta = (BlueprintSpawnableComponent))
 class CRAZYTANKIES_API UTankBarrel : public UStaticMeshComponent
 {
 	GENERATED_BODY()
 
-	
+public:
+    UTankBarrel();
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+    float LaunchSpeed;
 };

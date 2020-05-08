@@ -2,12 +2,18 @@
 
 
 #include "TankPlayerController.h"
+#include "TankAimingComponent.h"
 #include "Tank.h"
 
 ATankPlayerController::ATankPlayerController()
 {
 	ConstructorHelpers::FClassFinder<UTankWidget> TankUIFinder(TEXT("/Game/Tanks/UI/WBP_Veh_American_Tank"));
 	TankUIClass = TankUIFinder.Class;
+
+	CrossHairLocationX = 0.5f;
+	CrossHairLocationY = 0.333f;
+	LineTraceRange = 1000000.0f;
+
 }
 
 // Called when the game starts or when spawned
@@ -26,7 +32,7 @@ void ATankPlayerController::BeginPlay()
 void ATankPlayerController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	AimTowardsCrosshair();
 }
 
 // Called to bind functionality to input
@@ -82,3 +88,64 @@ void ATankPlayerController::Steer(float Torque)
 	TankMovement->IntendSteerRight(Torque);
 }
 
+void ATankPlayerController::AimTowardsCrosshair()
+{
+	UTankAimingComponent* TankAiming = Tank->FindComponentByClass<UTankAimingComponent>();
+
+	FVector HitLocation;
+	bool bGotHitLocation = GetSightRayHitLocation(HitLocation);
+	if (bGotHitLocation)
+		TankAiming->AimAt(HitLocation);
+}
+
+bool ATankPlayerController::GetSightRayHitLocation(FVector& HitLocation) const
+{
+	int32 ViewportSizeX, ViewportSizeY;
+	GetViewportSize(ViewportSizeX, ViewportSizeY);
+	FVector2D ScreenLocation = FVector2D(ViewportSizeX * CrossHairLocationX, ViewportSizeY * CrossHairLocationY);
+
+	FVector LookDirection;
+	if (GetLookDirection(ScreenLocation, LookDirection))
+	{
+		return GetLookVectorHitLocation(LookDirection, HitLocation);
+	}
+
+	return false;
+}
+
+bool ATankPlayerController::GetLookDirection(FVector2D ScreenLocation, FVector& LookDirection) const
+{
+	FVector CameraWorldLocation; // To be discarded
+	return  DeprojectScreenPositionToWorld(
+		ScreenLocation.X,
+		ScreenLocation.Y,
+		CameraWorldLocation,
+		LookDirection
+	);
+
+}
+
+bool ATankPlayerController::GetLookVectorHitLocation(FVector LookDirection, FVector& HitLocation) const
+{
+	FHitResult HitResult;
+	auto StartLocation = PlayerCameraManager->GetCameraLocation();
+	auto EndLocation = StartLocation + (LookDirection * LineTraceRange);
+	if (GetWorld()->LineTraceSingleByChannel(
+		HitResult,
+		StartLocation,
+		EndLocation,
+		ECollisionChannel::ECC_Camera)
+		)
+	{
+		if (HitResult.Actor == GetPawn())
+		{
+			HitLocation = FVector(0);
+			return false;
+		}
+
+		HitLocation = HitResult.Location;
+		return true;
+	}
+	HitLocation = FVector(0);
+	return false; // Line trace didn't succeed
+}
