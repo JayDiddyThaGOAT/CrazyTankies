@@ -8,6 +8,7 @@
 #include "GameFramework/Pawn.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "TankMovementComponent.h"
+#include "TankTrack.h"
 #include "Tank.generated.h"
 
 UCLASS()
@@ -25,10 +26,10 @@ protected:
 	class USkeletalMeshComponent* Hull;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	class UStaticMeshComponent* LeftTrack;
+	class UTankTrack* LeftTrack;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	class UStaticMeshComponent* RightTrack;
+	class UTankTrack* RightTrack;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* Camera;

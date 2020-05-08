@@ -26,31 +26,19 @@ void UTankMovementComponent::BeginPlay()
 	}
 
 	ATank* Tank = Cast<ATank>(GetOwner());
-	TArray<UStaticMeshComponent*> Tracks;
-	Tank->GetComponents<UStaticMeshComponent>(Tracks);
+	TArray<UTankTrack*> Tracks;
+	Tank->GetComponents<UTankTrack>(Tracks);
 	LeftTrack = Tracks[0];
 	RightTrack = Tracks[1];
-
-	LeftTrackLength = LeftTrack->GetStaticMesh()->GetBounds().GetBox().GetSize().X;
-	RightTrackLength = RightTrack->GetStaticMesh()->GetBounds().GetBox().GetSize().X;
-
-	LeftTread = LeftTrack->CreateDynamicMaterialInstance(0);
-	RightTread = RightTrack->CreateDynamicMaterialInstance(0);
 }
 
 void UTankMovementComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	for (int i = 0; i < Wheels.Num(); i++)
-	{
 		SetDriveTorque(DriveTorques[i], i);
-	}
 
-	
-	LeftTreadUVOffset = LeftTreadUVOffset + (GetEngineRotationSpeed() / LeftTrackLength) + (LeftTreadDirection / LeftTrackLength);
-	LeftTread->SetScalarParameterValue(TEXT("TreadUVOffset"), LeftTreadUVOffset);
-	
-	RightTreadUVOffset = RightTreadUVOffset + (GetEngineRotationSpeed() / RightTrackLength) + (RightTreadDirection / RightTrackLength);
-	RightTread->SetScalarParameterValue(TEXT("TreadUVOffset"), RightTreadUVOffset);
+	LeftTrack->TreadSpeed = GetEngineRotationSpeed();
+	RightTrack->TreadSpeed = GetEngineRotationSpeed();
 }
 
 void UTankMovementComponent::IntendDriveForward(float Torque)
@@ -63,8 +51,8 @@ void UTankMovementComponent::IntendDriveForward(float Torque)
 
 void UTankMovementComponent::IntendSteerRight(float Torque)
 {
-	LeftTreadDirection = Torque;
-	RightTreadDirection = -Torque;
+	LeftTrack->TreadDirection = Torque;
+	RightTrack->TreadDirection = -Torque;
 
 	for (int i = 0; i < DriveTorques.Num(); i++)
 	{

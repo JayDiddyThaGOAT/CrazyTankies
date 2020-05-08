@@ -14,11 +14,11 @@ ATank::ATank()
 	Hull->SetCollisionProfileName(TEXT("Vehicle"));
 	RootComponent = Hull;
 
-	LeftTrack = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("LeftTrack"));
+	LeftTrack = CreateDefaultSubobject<UTankTrack>(TEXT("LeftTrack"));
 	LeftTrack->AttachToComponent(Hull, FAttachmentTransformRules::KeepRelativeTransform, TEXT("Socket_Track_l"));
 	LeftTrack->SetCollisionProfileName(TEXT("Default"));
 
-	RightTrack = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RightTrack"));
+	RightTrack = CreateDefaultSubobject<UTankTrack>(TEXT("RightTrack"));
 	RightTrack->AttachToComponent(Hull, FAttachmentTransformRules::KeepRelativeTransform, TEXT("Socket_Track_r"));
 	RightTrack->SetCollisionProfileName(TEXT("Default"));
 

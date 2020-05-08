@@ -30,8 +30,8 @@ protected:
 private:
 	virtual void RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed) override;
 
-	class UStaticMeshComponent* LeftTrack;
-	class UStaticMeshComponent* RightTrack;
+	class UTankTrack* LeftTrack;
+	class UTankTrack* RightTrack;
 
 	class UMaterialInstanceDynamic* LeftTread;
 	class UMaterialInstanceDynamic* RightTread;
