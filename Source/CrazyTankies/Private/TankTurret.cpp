@@ -27,5 +27,4 @@ void UTankTurret::ElevateBarrel(float RelativeSpeed)
 {
 	RelativeSpeed = FMath::Clamp<float>(RelativeSpeed, -1, 1);
 	Barrel->AddRelativeRotation(FRotator(RelativeSpeed / MaxDegreesPerSecond, 0.0f, 0.0f));
-	UE_LOG(LogTemp, Warning, TEXT("%f"), Barrel->GetRelativeRotation().Pitch);
 }

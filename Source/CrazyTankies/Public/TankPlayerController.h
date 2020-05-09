@@ -33,6 +33,7 @@ public:
 private:
 	void AimHorizontally(float Val);
 	void AimVertically(float Val);
+	void ShootBarrelProjectile();
 	void Steer(float Torque);
 	void Drive(float Torque);
 	void Brake();

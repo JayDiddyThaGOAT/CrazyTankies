@@ -3,6 +3,7 @@
 
 #include "TankPlayerController.h"
 #include "TankAimingComponent.h"
+#include "Projectile.h"
 #include "Tank.h"
 
 ATankPlayerController::ATankPlayerController()
@@ -48,8 +49,16 @@ void ATankPlayerController::SetupInputComponent()
 
 		InputComponent->BindAction(TEXT("Brake"), EInputEvent::IE_Pressed, this, &ATankPlayerController::Brake);
 		InputComponent->BindAction(TEXT("Brake"), EInputEvent::IE_Released, this, &ATankPlayerController::Unbrake);
+
+		InputComponent->BindAction(TEXT("FireOutOfBarrel"), EInputEvent::IE_Pressed, this, &ATankPlayerController::ShootBarrelProjectile);
 	}
 	
+}
+
+void ATankPlayerController::ShootBarrelProjectile()
+{
+	UTankBarrel* Barrel = Tank->FindComponentByClass<UTankBarrel>();
+	Barrel->FireProjectile();
 }
 
 void ATankPlayerController::AimHorizontally(float Val)

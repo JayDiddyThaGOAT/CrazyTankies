@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/StaticMeshComponent.h"
+#include "Projectile.h"
 #include "TankBarrel.generated.h"
 
 /**
@@ -17,6 +18,11 @@ class CRAZYTANKIES_API UTankBarrel : public UStaticMeshComponent
 public:
     UTankBarrel();
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-    float LaunchSpeed;
+	void FireProjectile();
+
+	UPROPERTY(Category = Projectile, EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class AProjectile> ProjectileBlueprint;
+
+    UPROPERTY(Category = Projectile, EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	float LaunchSpeed;
 };
