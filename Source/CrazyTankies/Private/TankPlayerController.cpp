@@ -11,6 +11,7 @@ ATankPlayerController::ATankPlayerController()
 	ConstructorHelpers::FClassFinder<UTankWidget> TankUIFinder(TEXT("/Game/Tanks/UI/WBP_Veh_American_Tank"));
 	TankUIClass = TankUIFinder.Class;
 
+
 	CrossHairLocationX = 0.5f;
 	CrossHairLocationY = 0.333f;
 	LineTraceRange = 1000000.0f;
@@ -26,7 +27,14 @@ void ATankPlayerController::BeginPlay()
 
 	TankUIWidget = CreateWidget<UTankWidget>(this, TankUIClass);
 	if (TankUIWidget)
+	{
 		TankUIWidget->AddToViewport();
+
+		FInputModeGameOnly InputModeData;
+		InputModeData.SetConsumeCaptureMouseDown(true);
+		SetInputMode(InputModeData);
+	}
+
 }
 
 // Called every frame

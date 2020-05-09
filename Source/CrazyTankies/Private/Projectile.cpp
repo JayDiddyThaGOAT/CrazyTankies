@@ -63,7 +63,7 @@ void AProjectile::OnHit(class UPrimitiveComponent* HitComp, class AActor* OtherA
 	);
 
 	FTimerHandle Timer;
-	GetWorld()->GetTimerManager().SetTimer(Timer, this, &AProjectile::OnTimerE, DestroyDelay, false);
+	GetWorld()->GetTimerManager().SetTimer(Timer, this, &AProjectile::OnTimerExpire, DestroyDelay, false);
 }
 
 void AProjectile::OnTimerExpire()
