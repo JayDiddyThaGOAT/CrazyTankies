@@ -32,6 +32,6 @@ private:
 	float MaxElevationDegrees;
 
 protected:
-    UPROPERTY(Category = Barrel, EditDefaultsOnly, BlueprintReadOnly)
+    UPROPERTY(Category = Barrel, EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
     class UTankBarrel* Barrel;
 };

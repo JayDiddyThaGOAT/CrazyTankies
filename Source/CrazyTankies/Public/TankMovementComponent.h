@@ -44,5 +44,6 @@ private:
 	float LeftTrackLength, RightTrackLength;
 	int32 LeftTreadDirection, RightTreadDirection;
 
-	float PositionOffset;
+	UPROPERTY(Category = Tread, EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	bool bFlipTreadDirection;
 };

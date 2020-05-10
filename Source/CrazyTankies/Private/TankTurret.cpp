@@ -9,7 +9,7 @@ UTankTurret::UTankTurret()
 	SetCollisionProfileName(TEXT("OverlapAllDynamic"));
 
 	Barrel = CreateDefaultSubobject<UTankBarrel>(TEXT("Barrel"));
-	Barrel->AttachToComponent(this, FAttachmentTransformRules::KeepRelativeTransform, TEXT("Socket_Barrel"));
+	Barrel->SetupAttachment(this, TEXT("Socket_Barrel"));
 	Barrel->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
 
 	MaxDegreesPerSecond = 3.0f;

@@ -23,8 +23,8 @@ ATank::ATank()
 	RightTrack->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
-	SpringArm->AttachToComponent(Hull, FAttachmentTransformRules::KeepRelativeTransform, TEXT("Socket_Turret"));
-	SpringArm->SetRelativeRotation(FRotator(-20.0f, 0.0f, 0.0f));
+	SpringArm->AttachToComponent(Hull, FAttachmentTransformRules::KeepRelativeTransform);
+	SpringArm->SetRelativeLocationAndRotation(FVector::UpVector * 300.0f, FRotator(-20.0f, 0.0f, 0.0f));
 	SpringArm->TargetArmLength = 900.0f;
 	SpringArm->bInheritPitch = false;
 	SpringArm->bInheritYaw = false;
