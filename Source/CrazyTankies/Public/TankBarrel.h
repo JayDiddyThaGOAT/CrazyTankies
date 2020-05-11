@@ -7,8 +7,15 @@
 #include "Projectile.h"
 #include "TankBarrel.generated.h"
 
+UENUM()
+enum class EFiringState : uint8
+{
+	Ready,
+	Reloading
+};
+
 /**
- * 
+ * Responsible for firing the projectiles
  */
 UCLASS(ClassGroup = (Tank), meta = (BlueprintSpawnableComponent))
 class CRAZYTANKIES_API UTankBarrel : public UStaticMeshComponent
@@ -18,6 +25,8 @@ class CRAZYTANKIES_API UTankBarrel : public UStaticMeshComponent
 public:
     UTankBarrel();
 
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
 	void FireProjectile();
 
 	UPROPERTY(Category = Projectile, EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -25,4 +34,14 @@ public:
 
     UPROPERTY(Category = Projectile, EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	float LaunchSpeed;
+
+	UPROPERTY(Category = Projectile, EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	float ReloadTimeInSeconds;
+
+	EFiringState GetFiringState() const;
+
+private:
+	EFiringState FiringState;
+
+	float LastTimeFired;
 };

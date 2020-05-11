@@ -2,30 +2,43 @@
 
 
 #include "TankAIController.h"
-#include "TankAimingComponent.h"
-#include "TankMovementComponent.h"
 
 void ATankAIController::BeginPlay()
 {
 	Super::BeginPlay();
+
+	
 }
 // Called every frame
 void ATankAIController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	auto PlayerTank = GetWorld()->GetFirstPlayerController()->GetPawn();
+	auto PlayerTank = Cast<ATank>(GetWorld()->GetFirstPlayerController()->GetPawn());
 	auto ControlledTank = Cast<ATank>(GetPawn());
 
 	if (!(PlayerTank && ControlledTank))
 		return;
 	
+	Barrel = ControlledTank->FindComponentByClass<UTankBarrel>();
+	AimingComponent = ControlledTank->FindComponentByClass<UTankAimingComponent>();
+	MovementComponent = ControlledTank->FindComponentByClass<UTankMovementComponent>();
+
 	EPathFollowingRequestResult::Type FollowingPlayerRequest = MoveToActor(PlayerTank, AcceptanceRadius); // TODO check radius is in cm
 	if (FollowingPlayerRequest == EPathFollowingRequestResult::AlreadyAtGoal || FollowingPlayerRequest == EPathFollowingRequestResult::Failed)
-		ControlledTank->FindComponentByClass<UTankMovementComponent>()->IntendStop();
+		MovementComponent->IntendStop();
 	else
-		ControlledTank->FindComponentByClass<UTankMovementComponent>()->UndoStop();
+		MovementComponent->UndoStop();
 
-	if (ControlledTank->FindComponentByClass<UTankAimingComponent>())
-		ControlledTank->FindComponentByClass<UTankAimingComponent>()->AimAt(PlayerTank->GetActorLocation());
+	if (AimingComponent)
+	{
+		AimingComponent->AimAt(PlayerTank->GetActorLocation());
+
+		if (AimingComponent->GetAimingState() == EAimingState::Locked)
+			Barrel->FireProjectile();
+	}
+	else
+	{
+		Barrel->FireProjectile();
+	}
 }

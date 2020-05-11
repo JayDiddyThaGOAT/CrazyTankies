@@ -5,6 +5,9 @@
 #include "CoreMinimal.h"
 #include "AIController.h"
 #include "Tank.h"
+#include "TankAimingComponent.h"
+#include "TankMovementComponent.h"
+#include "Projectile.h"
 #include "TankAIController.generated.h"
 
 /**
@@ -23,4 +26,8 @@ protected:
 private:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
+
+	UTankAimingComponent* AimingComponent;
+	UTankMovementComponent* MovementComponent;
+	UTankBarrel* Barrel;
 };

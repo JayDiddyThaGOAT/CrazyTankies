@@ -66,7 +66,10 @@ void ATankPlayerController::SetupInputComponent()
 void ATankPlayerController::ShootBarrelProjectile()
 {
 	UTankBarrel* Barrel = Tank->FindComponentByClass<UTankBarrel>();
-	Barrel->FireProjectile();
+	UTankAimingComponent* AimingComponent = Tank->FindComponentByClass<UTankAimingComponent>();
+
+	if (AimingComponent->GetAimingState() == EAimingState::Locked)
+		Barrel->FireProjectile();
 }
 
 void ATankPlayerController::AimHorizontally(float Val)
