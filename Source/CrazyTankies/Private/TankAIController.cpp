@@ -2,6 +2,7 @@
 
 
 #include "TankAIController.h"
+#include "TankAimingComponent.h"
 #include "TankMovementComponent.h"
 
 void ATankAIController::BeginPlay()
@@ -18,11 +19,13 @@ void ATankAIController::Tick(float DeltaTime)
 
 	if (!(PlayerTank && ControlledTank))
 		return;
-
 	
 	EPathFollowingRequestResult::Type FollowingPlayerRequest = MoveToActor(PlayerTank, AcceptanceRadius); // TODO check radius is in cm
 	if (FollowingPlayerRequest == EPathFollowingRequestResult::AlreadyAtGoal || FollowingPlayerRequest == EPathFollowingRequestResult::Failed)
 		ControlledTank->FindComponentByClass<UTankMovementComponent>()->IntendStop();
 	else
 		ControlledTank->FindComponentByClass<UTankMovementComponent>()->UndoStop();
+
+	if (ControlledTank->FindComponentByClass<UTankAimingComponent>())
+		ControlledTank->FindComponentByClass<UTankAimingComponent>()->AimAt(PlayerTank->GetActorLocation());
 }
