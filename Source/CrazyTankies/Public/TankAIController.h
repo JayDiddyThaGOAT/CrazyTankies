@@ -30,4 +30,6 @@ private:
 	UTankAimingComponent* AimingComponent;
 	UTankMovementComponent* MovementComponent;
 	UTankBarrel* Barrel;
+
+	float LineTraceRange = 1000000.0f;
 };

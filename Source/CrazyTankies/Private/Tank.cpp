@@ -34,4 +34,6 @@ ATank::ATank()
 	Camera->AttachToComponent(SpringArm, FAttachmentTransformRules::KeepRelativeTransform);
 
 	Movement = CreateDefaultSubobject<UTankMovementComponent>(TEXT("TankMovement"));
+
+	bCanAffectNavigationGeneration = true;
 }

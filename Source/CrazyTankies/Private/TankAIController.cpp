@@ -26,9 +26,30 @@ void ATankAIController::Tick(float DeltaTime)
 
 	EPathFollowingRequestResult::Type FollowingPlayerRequest = MoveToActor(PlayerTank, AcceptanceRadius); // TODO check radius is in cm
 	if (FollowingPlayerRequest == EPathFollowingRequestResult::AlreadyAtGoal || FollowingPlayerRequest == EPathFollowingRequestResult::Failed)
-		MovementComponent->IntendStop();
+	{
+		if (AimingComponent)
+			MovementComponent->IntendStop();
+		else
+		{
+			FHitResult HitResult;
+			FVector StartLocation = Barrel->GetSocketLocation("Projectile");
+			FVector EndLocation = StartLocation + (Barrel->GetForwardVector() * LineTraceRange);
+
+			FCollisionQueryParams CollisionParams;
+			CollisionParams.AddIgnoredActor(ControlledTank);
+
+			if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_Visibility))
+			{
+				if (HitResult.Actor == PlayerTank)
+					Barrel->FireProjectile();
+			}
+		}
+	}
 	else
-		MovementComponent->UndoStop();
+	{
+		if (AimingComponent)
+			MovementComponent->UndoStop();
+	}
 
 	if (AimingComponent)
 	{
@@ -36,9 +57,5 @@ void ATankAIController::Tick(float DeltaTime)
 
 		if (AimingComponent->GetAimingState() == EAimingState::Locked)
 			Barrel->FireProjectile();
-	}
-	else
-	{
-		Barrel->FireProjectile();
 	}
 }
