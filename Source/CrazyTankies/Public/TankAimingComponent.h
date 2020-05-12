@@ -11,8 +11,8 @@
 UENUM()
 enum class EAimingState : uint8
 {
-	Aiming,
-	Locked
+	Locked,
+	Aiming
 };
 
 /**

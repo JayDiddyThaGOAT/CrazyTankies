@@ -107,6 +107,7 @@ void ATankPlayerController::Steer(float Torque)
 void ATankPlayerController::AimTowardsCrosshair()
 {
 	UTankAimingComponent* TankAiming = Tank->FindComponentByClass<UTankAimingComponent>();
+	UTankBarrel* Barrel = Tank->FindComponentByClass<UTankBarrel>();
 
 	FVector HitLocation;
 	bool bGotHitLocation = GetSightRayHitLocation(HitLocation);
@@ -114,7 +115,14 @@ void ATankPlayerController::AimTowardsCrosshair()
 	{
 		TankAiming->AimAt(HitLocation);
 
-		float CrosshairOpacity = TankAiming->GetAimingState() == EAimingState::Aiming ? 0.25f : 1.0f;
+		UE_LOG(LogTemp, Warning, TEXT("%d, %d"), TankAiming->GetAimingState(), Barrel->GetFiringState());
+
+		float CrosshairOpacity;
+		if (TankAiming->GetAimingState() == EAimingState::Locked && Barrel->GetFiringState() == EFiringState::Ready)
+			CrosshairOpacity = 1.0f;
+		else
+			CrosshairOpacity = 0.25f;
+
 		TankUIWidget->SetCrosshairColor(FLinearColor(1.0f, 1.0f, 1.0f, CrosshairOpacity));
 	}
 }
