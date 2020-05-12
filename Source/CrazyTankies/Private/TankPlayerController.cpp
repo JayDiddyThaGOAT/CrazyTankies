@@ -8,10 +8,6 @@
 
 ATankPlayerController::ATankPlayerController()
 {
-	ConstructorHelpers::FClassFinder<UTankWidget> TankUIFinder(TEXT("/Game/Tanks/UI/WBP_Veh_American_Tank"));
-	TankUIClass = TankUIFinder.Class;
-
-
 	CrossHairLocationX = 0.5f;
 	CrossHairLocationY = 0.333f;
 	LineTraceRange = 1000000.0f;
@@ -25,7 +21,7 @@ void ATankPlayerController::BeginPlay()
 
 	Tank = Cast<ATank>(GetPawn());
 
-	TankUIWidget = CreateWidget<UTankWidget>(this, TankUIClass);
+	TankUIWidget = CreateWidget<UTankWidget>(this, Tank->GetUI());
 	if (TankUIWidget)
 	{
 		TankUIWidget->AddToViewport();
@@ -115,7 +111,12 @@ void ATankPlayerController::AimTowardsCrosshair()
 	FVector HitLocation;
 	bool bGotHitLocation = GetSightRayHitLocation(HitLocation);
 	if (bGotHitLocation)
+	{
 		TankAiming->AimAt(HitLocation);
+
+		float CrosshairOpacity = TankAiming->GetAimingState() == EAimingState::Aiming ? 0.25f : 1.0f;
+		TankUIWidget->SetCrosshairColor(FLinearColor(1.0f, 1.0f, 1.0f, CrosshairOpacity));
+	}
 }
 
 bool ATankPlayerController::GetSightRayHitLocation(FVector& HitLocation) const

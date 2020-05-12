@@ -37,3 +37,8 @@ ATank::ATank()
 
 	bCanAffectNavigationGeneration = true;
 }
+
+TSubclassOf<class UTankWidget> ATank::GetUI() const
+{
+	return UserInterface;
+}

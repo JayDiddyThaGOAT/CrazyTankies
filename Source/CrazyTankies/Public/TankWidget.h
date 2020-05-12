@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/Image.h"
 #include "TankWidget.generated.h"
 
 /**
@@ -13,5 +14,11 @@ UCLASS()
 class CRAZYTANKIES_API UTankWidget : public UUserWidget
 {
 	GENERATED_BODY()
-	
+
+public:
+	void SetCrosshairColor(FLinearColor Color);
+
+private:
+	UPROPERTY(meta = (BindWidget))
+	class UImage* Crosshair;
 };

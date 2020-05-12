@@ -3,3 +3,7 @@
 
 #include "TankWidget.h"
 
+void UTankWidget::SetCrosshairColor(FLinearColor Color)
+{
+	Crosshair->SetColorAndOpacity(Color);
+}

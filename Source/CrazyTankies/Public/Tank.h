@@ -10,6 +10,7 @@
 #include "TankMovementComponent.h"
 #include "TankAimingComponent.h"
 #include "TankTrack.h"
+#include "TankWidget.h"
 #include "Tank.generated.h"
 
 UCLASS()
@@ -21,6 +22,7 @@ public:
 	// Sets default values for this pawn's properties
 	ATank();
 
+	TSubclassOf<class UTankWidget> GetUI() const;
 
 protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -40,4 +42,7 @@ protected:
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UTankMovementComponent* Movement;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class UTankWidget> UserInterface;
 };

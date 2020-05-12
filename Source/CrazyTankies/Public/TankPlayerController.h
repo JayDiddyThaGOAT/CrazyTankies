@@ -40,7 +40,6 @@ private:
 	void Unbrake();
 
 protected:
-	TSubclassOf<class UTankWidget> TankUIClass;
 	class UTankWidget* TankUIWidget;
 	class ATank* Tank;
 
