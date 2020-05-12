@@ -2,6 +2,7 @@
 
 
 #include "TankTurret.h"
+#include "Kismet/KismetMathLibrary.h"
 
 UTankTurret::UTankTurret()
 {
@@ -12,19 +13,32 @@ UTankTurret::UTankTurret()
 	Barrel->SetupAttachment(this, TEXT("Socket_Barrel"));
 	Barrel->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
 
-	MaxDegreesPerSecond = 3.0f;
-	MinElevationDegrees = 0.0f;
+	MaxDegreesPerSecond = 1.0f;
+	MinElevationDegrees = -11.0f;
 	MaxElevationDegrees = 10.0f;
 }
 
-void UTankTurret::RotateTurret(float RelativeSpeed)
+
+float UTankTurret::GetMinElevationDegrees() const
 {
-	RelativeSpeed = FMath::Clamp<float>(RelativeSpeed, -1, 1);
-	AddRelativeRotation(FRotator(0, RelativeSpeed / MaxDegreesPerSecond, 0));
+	return MinElevationDegrees;
 }
 
-void UTankTurret::ElevateBarrel(float RelativeSpeed)
+float UTankTurret::GetMaxElevationDegrees() const
 {
-	RelativeSpeed = FMath::Clamp<float>(RelativeSpeed, -1, 1);
-	Barrel->AddRelativeRotation(FRotator(RelativeSpeed / MaxDegreesPerSecond, 0.0f, 0.0f));
+	return MaxElevationDegrees;
+}
+
+void UTankTurret::Rotate(FRotator CurrentRotation, FRotator TargetRotation)
+{
+	FRotator InterpRotation = UKismetMathLibrary::RInterpTo(CurrentRotation, TargetRotation, GetWorld()->GetDeltaSeconds(), MaxDegreesPerSecond);
+	SetWorldRotation(FRotator(0.0f, InterpRotation.Yaw, 0.0f));
+}
+
+void UTankTurret::ElevateBarrel(FRotator CurrentRotation, FRotator TargetRotation)
+{
+	FRotator InterpRotation = UKismetMathLibrary::RInterpTo(CurrentRotation, TargetRotation, GetWorld()->GetDeltaSeconds(), MaxDegreesPerSecond);
+
+	InterpRotation.Pitch = UKismetMathLibrary::ClampAngle(InterpRotation.Pitch, MinElevationDegrees, MaxElevationDegrees);
+	Barrel->SetRelativeRotation(FRotator(InterpRotation.Pitch, 0.0f, 0.0f));
 }

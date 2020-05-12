@@ -115,8 +115,6 @@ void ATankPlayerController::AimTowardsCrosshair()
 	{
 		TankAiming->AimAt(HitLocation);
 
-		UE_LOG(LogTemp, Warning, TEXT("%d, %d"), TankAiming->GetAimingState(), Barrel->GetFiringState());
-
 		float CrosshairOpacity;
 		if (TankAiming->GetAimingState() == EAimingState::Locked && Barrel->GetFiringState() == EFiringState::Ready)
 			CrosshairOpacity = 1.0f;

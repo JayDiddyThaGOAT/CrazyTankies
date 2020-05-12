@@ -18,8 +18,11 @@ class CRAZYTANKIES_API UTankTurret : public USkeletalMeshComponent
 public:
     UTankTurret();
 
-    void RotateTurret(float RelativeSpeed);
-    void ElevateBarrel(float RelativeSpeed);
+    float GetMinElevationDegrees() const;
+    float GetMaxElevationDegrees() const;
+
+    void Rotate(FRotator CurrentRotation, FRotator TargetRotation);
+    void ElevateBarrel(FRotator CurrentRotation, FRotator TargetRotation);
 
 private:
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))

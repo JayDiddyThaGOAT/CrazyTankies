@@ -32,7 +32,7 @@ void ATankAIController::Tick(float DeltaTime)
 		else
 		{
 			FHitResult HitResult;
-			FVector StartLocation = Barrel->GetSocketLocation("Projectile");
+			FVector StartLocation = Barrel->GetSocketLocation("Socket_Projectile");
 			FVector EndLocation = StartLocation + (Barrel->GetForwardVector() * LineTraceRange);
 
 			FCollisionQueryParams CollisionParams;

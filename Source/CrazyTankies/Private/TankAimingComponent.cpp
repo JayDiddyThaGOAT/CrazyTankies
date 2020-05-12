@@ -3,6 +3,7 @@
 
 #include "TankAimingComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Tank.h"
 
 // Sets default values for this component's properties
@@ -12,7 +13,7 @@ UTankAimingComponent::UTankAimingComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
+	AimingState = EAimingState::Aiming;
 }
 
 
@@ -71,14 +72,24 @@ void UTankAimingComponent::MoveBarrelTowards(FVector TargetDirection)
 {
 	FRotator BarrelRotator = Barrel->GetForwardVector().Rotation();
 	FRotator AimAsRotator = TargetDirection.Rotation();
-	FRotator DeltaRotator = (AimAsRotator - BarrelRotator).GetNormalized();
 
-	Turret->ElevateBarrel(DeltaRotator.Pitch);
-	Turret->RotateTurret(DeltaRotator.Yaw);
+	Turret->Rotate(BarrelRotator, AimAsRotator);
+	Turret->ElevateBarrel(BarrelRotator, AimAsRotator);
 }
 
 bool UTankAimingComponent::IsBarrelLocked()
 {
+	bool bLockedTurret;
+
 	FVector BarrelForward = Barrel->GetForwardVector();
-	return BarrelForward.Equals(AimDirection, 0.01);
+
+	if (!(Turret->GetMinElevationDegrees() == 0 && Turret->GetMaxElevationDegrees() == 0))
+		bLockedTurret = BarrelForward.Equals(AimDirection, 0.01);
+	else
+	{
+		bLockedTurret = UKismetMathLibrary::NearlyEqual_FloatFloat(BarrelForward.Y, AimDirection.Y, 0.05f) &&
+						UKismetMathLibrary::NearlyEqual_FloatFloat(BarrelForward.X, AimDirection.X, 0.05f);
+	}
+
+	return bLockedTurret;
 }
