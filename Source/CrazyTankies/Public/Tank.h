@@ -7,6 +7,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/Pawn.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Materials/MaterialInstanceDynamic.h"
 #include "TankMovementComponent.h"
 #include "TankAimingComponent.h"
 #include "TankTrack.h"
@@ -21,6 +22,10 @@ class CRAZYTANKIES_API ATank : public APawn
 public:
 	// Sets default values for this pawn's properties
 	ATank();
+
+	virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+	float GetHealthPercentage() const;
+	UMaterialInstanceDynamic* GetPaintJob() const;
 
 	TSubclassOf<class UTankWidget> GetUI() const;
 
@@ -45,4 +50,16 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class UTankWidget> UserInterface;
+
+private:
+	virtual void BeginPlay() override;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Health")
+	int32 StartingHealth;
+
+	UPROPERTY(VisibleAnywhere, Category = "Health")
+	int32 CurrentHealth;
+
+	class UMaterialInstanceDynamic* PaintJob;
+
 };

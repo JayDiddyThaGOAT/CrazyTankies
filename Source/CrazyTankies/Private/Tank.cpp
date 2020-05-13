@@ -2,6 +2,8 @@
 
 
 #include "Tank.h"
+#include "TankTurret.h"
+#include "TankBarrel.h"
 
 // Sets default values
 ATank::ATank()
@@ -36,9 +38,60 @@ ATank::ATank()
 	Movement = CreateDefaultSubobject<UTankMovementComponent>(TEXT("TankMovement"));
 
 	bCanAffectNavigationGeneration = true;
+
+	StartingHealth = 100;
 }
+
+void ATank::BeginPlay()
+{
+	Super::BeginPlay();
+	CurrentHealth = StartingHealth;
+
+	PaintJob = UMaterialInstanceDynamic::Create(Hull->GetMaterial(0), this);
+	Hull->SetMaterial(0, PaintJob);
+
+	UTankTurret* Turret = FindComponentByClass<UTankTurret>();
+	UTankBarrel* Barrel = FindComponentByClass<UTankBarrel>();
+
+	if (Turret)
+		Turret->SetMaterial(0, PaintJob);
+
+	if (Barrel)
+		Barrel->SetMaterial(0, PaintJob);
+}
+
 
 TSubclassOf<class UTankWidget> ATank::GetUI() const
 {
 	return UserInterface;
 }
+
+UMaterialInstanceDynamic* ATank::GetPaintJob() const
+{
+	return PaintJob;
+}
+
+float ATank::GetHealthPercentage() const
+{
+	return (float)CurrentHealth / (float)StartingHealth;
+}
+
+
+float ATank::TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	int32 DamagePoints = FPlatformMath::RoundToInt(Damage);
+	int32 DamageToApply = FMath::Clamp(DamagePoints, 0, CurrentHealth);
+
+	CurrentHealth -= DamageToApply;
+	PaintJob->SetScalarParameterValue(TEXT("DamagedAlpha"), 1.0f - GetHealthPercentage());
+	
+	/*
+	if (CurrentHealth <= 0)
+	{
+		OnDeath.Broadcast();
+	}
+	*/
+
+	return DamageToApply;
+}
+

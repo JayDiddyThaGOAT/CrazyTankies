@@ -2,6 +2,7 @@
 
 
 #include "TankBarrel.h"
+#include "Tank.h"
 
 UTankBarrel::UTankBarrel()
 {

@@ -2,6 +2,7 @@
 
 
 #include "TankTurret.h"
+#include "Tank.h"
 #include "Kismet/KismetMathLibrary.h"
 
 UTankTurret::UTankTurret()
@@ -17,7 +18,6 @@ UTankTurret::UTankTurret()
 	MinElevationDegrees = -11.0f;
 	MaxElevationDegrees = 10.0f;
 }
-
 
 float UTankTurret::GetMinElevationDegrees() const
 {
@@ -42,3 +42,4 @@ void UTankTurret::ElevateBarrel(FRotator CurrentRotation, FRotator TargetRotatio
 	InterpRotation.Pitch = UKismetMathLibrary::ClampAngle(InterpRotation.Pitch, MinElevationDegrees, MaxElevationDegrees);
 	Barrel->SetRelativeRotation(FRotator(InterpRotation.Pitch, 0.0f, 0.0f));
 }
+
