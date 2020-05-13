@@ -9,6 +9,22 @@ void ATankAIController::BeginPlay()
 
 	
 }
+
+void ATankAIController::SetPawn(APawn* InPawn)
+{
+	Super::SetPawn(InPawn);
+
+	if (InPawn)
+	{
+		auto ControlledTank = Cast<ATank>(GetPawn());
+		if (!ControlledTank)
+			return;
+
+		//TODO Subscribe our local method to tank death's event
+		ControlledTank->OnDeath.AddUniqueDynamic(this, &ATankAIController::OnControlledTankDeath);
+	}
+}
+
 // Called every frame
 void ATankAIController::Tick(float DeltaTime)
 {
@@ -58,4 +74,9 @@ void ATankAIController::Tick(float DeltaTime)
 		if (AimingComponent->GetAimingState() == EAimingState::Locked)
 			Barrel->FireProjectile();
 	}
+}
+
+void ATankAIController::OnControlledTankDeath()
+{
+	GetPawn()->DetachFromControllerPendingDestroy();
 }

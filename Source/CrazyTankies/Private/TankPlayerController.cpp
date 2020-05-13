@@ -33,6 +33,33 @@ void ATankPlayerController::BeginPlay()
 
 }
 
+void ATankPlayerController::SetPawn(APawn* InPawn)
+{
+	Super::SetPawn(InPawn);
+
+	if (InPawn)
+	{
+		auto ControlledTank = Cast<ATank>(GetPawn());
+		if (!ControlledTank)
+			return;
+
+		//TODO Subscribe our local method to tank death's event
+		ControlledTank->OnDeath.AddUniqueDynamic(this, &ATankPlayerController::OnControlledTankDeath);
+	}
+}
+
+void ATankPlayerController::OnControlledTankDeath()
+{
+	StartSpectatingOnly();
+
+	TankUIWidget->RemoveFromViewport();
+
+	FInputModeUIOnly InputModeData;
+	InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+	bShowMouseCursor = true;
+	SetInputMode(InputModeData);
+}
+
 // Called every frame
 void ATankPlayerController::Tick(float DeltaTime)
 {

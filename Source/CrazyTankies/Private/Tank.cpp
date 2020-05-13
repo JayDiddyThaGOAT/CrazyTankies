@@ -84,13 +84,11 @@ float ATank::TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AC
 
 	CurrentHealth -= DamageToApply;
 	PaintJob->SetScalarParameterValue(TEXT("DamagedAlpha"), 1.0f - GetHealthPercentage());
-	
-	/*
+
 	if (CurrentHealth <= 0)
 	{
 		OnDeath.Broadcast();
 	}
-	*/
 
 	return DamageToApply;
 }

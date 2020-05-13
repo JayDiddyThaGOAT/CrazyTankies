@@ -21,11 +21,15 @@ class CRAZYTANKIES_API ATankAIController : public AAIController
 protected:
 	// How close can the AI tank get
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
-	float AcceptanceRadius = 500;
+	float AcceptanceRadius = 1500;
 
 private:
 	virtual void BeginPlay() override;
+	virtual void SetPawn(APawn* InPawn) override;
 	virtual void Tick(float DeltaSeconds) override;
+
+	UFUNCTION()
+	void OnControlledTankDeath();
 
 	UTankAimingComponent* AimingComponent;
 	UTankMovementComponent* MovementComponent;

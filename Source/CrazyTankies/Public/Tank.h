@@ -14,6 +14,8 @@
 #include "TankWidget.h"
 #include "Tank.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTankDelegate);
+
 UCLASS()
 class CRAZYTANKIES_API ATank : public APawn
 {
@@ -28,6 +30,8 @@ public:
 	UMaterialInstanceDynamic* GetPaintJob() const;
 
 	TSubclassOf<class UTankWidget> GetUI() const;
+
+	FTankDelegate OnDeath;
 
 protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
