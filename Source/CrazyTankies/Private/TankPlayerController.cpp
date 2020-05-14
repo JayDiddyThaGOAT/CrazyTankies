@@ -63,7 +63,9 @@ void ATankPlayerController::OnControlledTankDeath()
 	{
 		ATank* CurrentTank = Cast<ATank>(Tanks[i]);
 		CurrentTank->FindComponentByClass<UTankMovementComponent>()->IntendStop();
-		CurrentTank->DetachFromControllerPendingDestroy();
+
+		if (CurrentTank != Tank)
+			CurrentTank->DetachFromControllerPendingDestroy();
 	}
 }
 
