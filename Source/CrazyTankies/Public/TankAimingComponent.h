@@ -41,7 +41,7 @@ public:
 
 private:
 	void MoveBarrelTowards(FVector AimDirection);
-	bool IsBarrelLocked();
+	bool IsBarrelLockedOnTarget();
 
 	class UTankTurret* Turret;
 	class UTankBarrel* Barrel;

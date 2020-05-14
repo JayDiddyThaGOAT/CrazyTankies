@@ -2,6 +2,7 @@
 
 
 #include "TankPlayerController.h"
+#include "Kismet/GameplayStatics.h"
 #include "TankAimingComponent.h"
 #include "Projectile.h"
 #include "Tank.h"
@@ -50,14 +51,20 @@ void ATankPlayerController::SetPawn(APawn* InPawn)
 
 void ATankPlayerController::OnControlledTankDeath()
 {
-	StartSpectatingOnly();
-
 	TankUIWidget->RemoveFromViewport();
-
 	FInputModeUIOnly InputModeData;
 	InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
 	bShowMouseCursor = true;
 	SetInputMode(InputModeData);
+
+	TArray<AActor*> Tanks;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ATank::StaticClass(), Tanks);
+	for (int i = 0; i < Tanks.Num(); i++)
+	{
+		ATank* CurrentTank = Cast<ATank>(Tanks[i]);
+		CurrentTank->FindComponentByClass<UTankMovementComponent>()->IntendStop();
+		CurrentTank->DetachFromControllerPendingDestroy();
+	}
 }
 
 // Called every frame

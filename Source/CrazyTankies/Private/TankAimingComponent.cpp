@@ -33,7 +33,7 @@ void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if (IsBarrelLocked())
+	if (IsBarrelLockedOnTarget())
 		AimingState = EAimingState::Locked;
 	else
 		AimingState = EAimingState::Aiming;
@@ -77,7 +77,7 @@ void UTankAimingComponent::MoveBarrelTowards(FVector TargetDirection)
 	Turret->ElevateBarrel(BarrelRotator, AimAsRotator);
 }
 
-bool UTankAimingComponent::IsBarrelLocked()
+bool UTankAimingComponent::IsBarrelLockedOnTarget()
 {
 	bool bLockedTurret;
 
@@ -86,10 +86,7 @@ bool UTankAimingComponent::IsBarrelLocked()
 	if (!(Turret->GetMinElevationDegrees() == 0 && Turret->GetMaxElevationDegrees() == 0))
 		bLockedTurret = BarrelForward.Equals(AimDirection, 0.01);
 	else
-	{
-		bLockedTurret = UKismetMathLibrary::NearlyEqual_FloatFloat(BarrelForward.Y, AimDirection.Y, 0.05f) &&
-						UKismetMathLibrary::NearlyEqual_FloatFloat(BarrelForward.X, AimDirection.X, 0.05f);
-	}
+		bLockedTurret = UKismetMathLibrary::NearlyEqual_FloatFloat(BarrelForward.X, AimDirection.X, 0.01f);
 
 	return bLockedTurret;
 }

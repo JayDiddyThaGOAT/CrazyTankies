@@ -44,7 +44,9 @@ void ATankAIController::Tick(float DeltaTime)
 	if (FollowingPlayerRequest == EPathFollowingRequestResult::AlreadyAtGoal || FollowingPlayerRequest == EPathFollowingRequestResult::Failed)
 	{
 		if (AimingComponent)
+		{
 			MovementComponent->IntendStop();
+		}
 		else
 		{
 			FHitResult HitResult;
@@ -70,6 +72,8 @@ void ATankAIController::Tick(float DeltaTime)
 	if (AimingComponent)
 	{
 		AimingComponent->AimAt(PlayerTank->GetActorLocation());
+
+		UE_LOG(LogTemp, Warning, TEXT("%d"), AimingComponent->GetAimingState());
 
 		if (AimingComponent->GetAimingState() == EAimingState::Locked)
 			Barrel->FireProjectile();

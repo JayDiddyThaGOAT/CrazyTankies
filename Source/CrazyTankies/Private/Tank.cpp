@@ -40,6 +40,9 @@ ATank::ATank()
 	bCanAffectNavigationGeneration = true;
 
 	StartingHealth = 100;
+
+	OnFireFX = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("OnFireFX"));
+	OnFireFX->bAutoActivate = false;
 }
 
 void ATank::BeginPlay()
@@ -58,8 +61,14 @@ void ATank::BeginPlay()
 
 	if (Barrel)
 		Barrel->SetMaterial(0, PaintJob);
-}
 
+	FParticleSysParam BoneSocketParams;
+	BoneSocketParams.Name = TEXT("BoneSocketActor");
+	BoneSocketParams.ParamType = PSPT_Actor;
+	BoneSocketParams.Actor = this;
+
+	OnFireFX->InstanceParameters.Add(BoneSocketParams);
+}
 
 TSubclassOf<class UTankWidget> ATank::GetUI() const
 {
@@ -87,9 +96,13 @@ float ATank::TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AC
 
 	if (CurrentHealth <= 0)
 	{
+		OnFireFX->Activate();
+		Movement->IntendStop();
 		OnDeath.Broadcast();
 	}
 
 	return DamageToApply;
 }
+
+
 

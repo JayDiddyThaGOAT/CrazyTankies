@@ -64,6 +64,8 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Health")
 	int32 CurrentHealth;
 
-	class UMaterialInstanceDynamic* PaintJob;
+	UPROPERTY(VisibleDefaultsOnly, Category = "Health")
+	class UParticleSystemComponent* OnFireFX;
 
+	class UMaterialInstanceDynamic* PaintJob;
 };
