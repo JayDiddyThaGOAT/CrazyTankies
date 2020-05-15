@@ -86,6 +86,7 @@ void ATankPlayerController::SetupInputComponent()
 		InputComponent->BindAxis(TEXT("AimVertical"), this, &ATankPlayerController::AimVertically);
 		InputComponent->BindAxis(TEXT("DriveForward"), this, &ATankPlayerController::Drive);
 		InputComponent->BindAxis(TEXT("SteerRight"), this, &ATankPlayerController::Steer);
+		InputComponent->BindAxis(TEXT("Zoom"), this, &ATankPlayerController::ZoomInToFirstPerson);
 
 		InputComponent->BindAction(TEXT("Brake"), EInputEvent::IE_Pressed, this, &ATankPlayerController::Brake);
 		InputComponent->BindAction(TEXT("Brake"), EInputEvent::IE_Released, this, &ATankPlayerController::Unbrake);
@@ -102,6 +103,20 @@ void ATankPlayerController::ShootBarrelProjectile()
 
 	if (AimingComponent->GetAimingState() == EAimingState::Locked)
 		Barrel->FireProjectile();
+}
+
+void ATankPlayerController::ZoomInToFirstPerson(float Val)
+{
+	UCameraComponent* Camera = Tank->FindComponentByClass<UCameraComponent>();
+	FVector FirstPersonPosition = Tank->GetFirstPersonPosition();
+	FRotator FirstPersonRotation = Tank->GetFirstPesrsonRotation();
+
+	FVector CameraLocation = FMath::Lerp(FVector::ZeroVector, FirstPersonPosition, Val);
+	FRotator CameraRotation = FMath::Lerp(FRotator::ZeroRotator, FirstPersonRotation, Val);
+
+	Camera->SetRelativeLocation(CameraLocation);
+	Camera->SetRelativeRotation(CameraRotation);
+
 }
 
 void ATankPlayerController::AimHorizontally(float Val)

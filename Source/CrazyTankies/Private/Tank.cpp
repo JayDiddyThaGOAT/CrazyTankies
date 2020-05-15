@@ -32,8 +32,8 @@ ATank::ATank()
 	SpringArm->bInheritYaw = false;
 	SpringArm->bInheritRoll = false;
 
-	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
-	Camera->AttachToComponent(SpringArm, FAttachmentTransformRules::KeepRelativeTransform);
+	ThirdPersonCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("ThirdPersonCamera"));
+	ThirdPersonCamera->AttachToComponent(SpringArm, FAttachmentTransformRules::KeepRelativeTransform);
 
 	Movement = CreateDefaultSubobject<UTankMovementComponent>(TEXT("TankMovement"));
 
@@ -73,6 +73,16 @@ void ATank::BeginPlay()
 TSubclassOf<class UTankWidget> ATank::GetUI() const
 {
 	return UserInterface;
+}
+
+FVector ATank::GetFirstPersonPosition() const
+{
+	return FirstPersonPosition;
+}
+
+FRotator ATank::GetFirstPesrsonRotation() const
+{
+	return FirstPersonRotation;
 }
 
 UMaterialInstanceDynamic* ATank::GetPaintJob() const

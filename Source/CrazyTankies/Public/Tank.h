@@ -31,6 +31,9 @@ public:
 
 	TSubclassOf<class UTankWidget> GetUI() const;
 
+	FVector GetFirstPersonPosition() const;
+	FRotator GetFirstPesrsonRotation() const;
+
 	FTankDelegate OnDeath;
 
 protected:
@@ -44,7 +47,7 @@ protected:
 	class UTankTrack* RightTrack;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	class UCameraComponent* Camera;
+	class UCameraComponent* ThirdPersonCamera;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* SpringArm;
@@ -55,17 +58,25 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class UTankWidget> UserInterface;
 
+
 private:
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Health")
+	UPROPERTY(Category = "Health", EditDefaultsOnly)
 	int32 StartingHealth;
 
-	UPROPERTY(VisibleAnywhere, Category = "Health")
+	UPROPERTY(Category = "Health", VisibleAnywhere)
 	int32 CurrentHealth;
 
-	UPROPERTY(VisibleDefaultsOnly, Category = "Health")
+	UPROPERTY(Category = "Health", VisibleDefaultsOnly)
 	class UParticleSystemComponent* OnFireFX;
 
+	UPROPERTY(Category = "Camera", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	FVector FirstPersonPosition;
+
+	UPROPERTY(Category = "Camera", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	FRotator FirstPersonRotation;
+
 	class UMaterialInstanceDynamic* PaintJob;
+
 };
