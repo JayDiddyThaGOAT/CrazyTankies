@@ -74,6 +74,10 @@ void ATankPlayerController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	AimTowardsCrosshair();
+
+	UTankTurret* Turret = Tank->FindComponentByClass<UTankTurret>();
+	TankUIWidget->SetTurretAngle(Turret->GetRelativeRotation().Yaw);
+	TankUIWidget->SetHullAngle(Tank->GetActorRotation().Yaw);
 }
 
 // Called to bind functionality to input
