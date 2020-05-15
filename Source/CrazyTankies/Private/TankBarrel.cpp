@@ -8,7 +8,11 @@ UTankBarrel::UTankBarrel()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 
+	static ConstructorHelpers::FClassFinder<AProjectile> DefaultProjectileFinder(TEXT("/Game/Tanks/Projectile/BP_Wep_Tank_Projectile"));
+	ProjectileBlueprint = DefaultProjectileFinder.Class;
+
 	LaunchSpeed = 5000.0f;
+	ReloadTimeInSeconds = 3.0f;
 	SetCollisionProfileName(TEXT("BlockAll"));
 
 	LastTimeFired = FPlatformTime::Seconds();

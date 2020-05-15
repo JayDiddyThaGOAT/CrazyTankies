@@ -8,7 +8,7 @@
 UTankTurret::UTankTurret()
 {
 	SetSimulatePhysics(false);
-	SetCollisionProfileName(TEXT("OverlapAllDynamic"));
+	SetCollisionProfileName(TEXT("OverlapOnlyPawn"));
 
 	Barrel = CreateDefaultSubobject<UTankBarrel>(TEXT("Barrel"));
 	Barrel->SetupAttachment(this, TEXT("Socket_Barrel"));
