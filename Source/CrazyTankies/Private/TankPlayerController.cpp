@@ -76,7 +76,7 @@ void ATankPlayerController::Tick(float DeltaTime)
 	AimTowardsCrosshair();
 
 	UTankTurret* Turret = Tank->FindComponentByClass<UTankTurret>();
-	TankUIWidget->SetTurretAngle(Turret->GetRelativeRotation().Yaw);
+	TankUIWidget->SetTurretAngle(Turret->GetComponentRotation().Yaw);
 	TankUIWidget->SetHullAngle(Tank->GetActorRotation().Yaw);
 }
 

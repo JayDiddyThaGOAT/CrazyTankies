@@ -21,6 +21,6 @@ void UTankTrack::TickComponent(float DeltaTime, enum ELevelTick TickType, FActor
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	UVOffset = UVOffset + (TreadSpeed / TrackLength) + (TreadDirection / TrackLength);
+	UVOffset = UVOffset + ((TreadSpeed * TreadDirection) / TrackLength);
 	Tread->SetScalarParameterValue(TEXT("TreadUVOffset"), UVOffset);
 }

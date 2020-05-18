@@ -26,6 +26,9 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	UPROPERTY(Category = Track, EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	bool bFlipTreadDirection = false;
 	
 private:
 	virtual void RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed) override;
@@ -33,17 +36,9 @@ private:
 	class UTankTrack* LeftTrack;
 	class UTankTrack* RightTrack;
 
-	class UMaterialInstanceDynamic* LeftTread;
-	class UMaterialInstanceDynamic* RightTread;
-
 	float TotalWheelMass;
 	TArray<float> DriveTorques;
 
-	float LeftTreadUVOffset, RightTreadUVOffset;
-	float LeftTreadOffset, RightTreadOffset;
-	float LeftTrackLength, RightTrackLength;
-	int32 LeftTreadDirection, RightTreadDirection;
-
-	UPROPERTY(Category = Tread, EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	bool bFlipTreadDirection;
+	float ForwardTorque, RightTorque;
+	float BrakeTorque;
 };

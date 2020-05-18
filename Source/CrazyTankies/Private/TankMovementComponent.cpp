@@ -6,13 +6,7 @@
 
 UTankMovementComponent::UTankMovementComponent()
 {
-	LeftTreadOffset = 0.0f;
-	RightTreadOffset = 0.0f;
-
-	LeftTreadDirection = 0;
-	RightTreadDirection = 0;
-
-	bFlipTreadDirection = false;
+	Mass = 5000.0f;
 }
 
 void UTankMovementComponent::BeginPlay()
@@ -25,7 +19,7 @@ void UTankMovementComponent::BeginPlay()
 		TotalWheelMass += Wheels[i]->Mass;
 	}
 
-	ATank* Tank = Cast<ATank>(GetOwner());
+	ATank* Tank = Cast<ATank>(GetPawnOwner());
 	TArray<UTankTrack*> Tracks;
 	Tank->GetComponents<UTankTrack>(Tracks);
 	LeftTrack = Tracks[0];
@@ -35,58 +29,87 @@ void UTankMovementComponent::BeginPlay()
 void UTankMovementComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	for (int i = 0; i < Wheels.Num(); i++)
+	{
 		SetDriveTorque(DriveTorques[i], i);
+		SetBrakeTorque(BrakeTorque, i);
+	}
+	
+	if (FMath::Abs(GetForwardSpeed()) < 0.3f)
+	{
+		if (!FMath::IsNearlyZero(BrakeTorque))
+			return;
 
-	LeftTrack->TreadSpeed = !bFlipTreadDirection ? GetEngineRotationSpeed() : -GetEngineRotationSpeed();
-	RightTrack->TreadSpeed = !bFlipTreadDirection ? GetEngineRotationSpeed() : -GetEngineRotationSpeed();
+		if (!FMath::IsNearlyZero(RightTorque))
+		{
+			LeftTrack->TreadSpeed = 1.0f;
+			RightTrack->TreadSpeed = 1.0f;
+		}
+		else
+		{
+			LeftTrack->TreadSpeed = 0.0f;
+			RightTrack->TreadSpeed = 0.0f;
+		}
+	}
+	else
+	{
+		LeftTrack->TreadSpeed = GetEngineRotationSpeed();
+		RightTrack->TreadSpeed = GetEngineRotationSpeed();
+	}
+
+	if (FMath::IsNearlyZero(FMath::Abs(RightTorque), 0.5f))
+	{
+		LeftTrack->TreadDirection = !bFlipTreadDirection ? 1.0f : -1.0f;
+		RightTrack->TreadDirection = !bFlipTreadDirection ? 1.0f : -1.0f;
+	}
+	else
+	{
+		LeftTrack->TreadDirection = !bFlipTreadDirection ? 1.0f : -1.0f;
+		RightTrack->TreadDirection = !bFlipTreadDirection ? -1.0f : 1.0f;
+	}
 }
 
 void UTankMovementComponent::IntendDriveForward(float Torque)
 {
+	ForwardTorque = Torque;
+
 	for (int i = 0; i < DriveTorques.Num(); i++)
 	{
-		DriveTorques[i] = Torque * Wheels[i]->Mass;
+		DriveTorques[i] = ForwardTorque * Wheels[i]->Mass;
 	}
 }
 
 void UTankMovementComponent::IntendSteerRight(float Torque)
 {
-	LeftTrack->TreadDirection = Torque;
-	RightTrack->TreadDirection = -Torque;
+	RightTorque = Torque;
 
 	for (int i = 0; i < DriveTorques.Num(); i++)
 	{
 		if (i % 2 == 0)
-			DriveTorques[i] += Torque * TotalWheelMass;
+			DriveTorques[i] += RightTorque * TotalWheelMass;
 		else
-			DriveTorques[i] -= Torque * TotalWheelMass;
+			DriveTorques[i] -= RightTorque * TotalWheelMass;
 	}
 }
 
 void UTankMovementComponent::IntendStop()
 {
-	for (int i = 0; i < Wheels.Num(); i++)
-	{
-		SetBrakeTorque(100000, i);
-	}
+	BrakeTorque = 100000.0f;
 }
 
 void UTankMovementComponent::UndoStop()
 {
-	for (int i = 0; i < Wheels.Num(); i++)
-	{
-		SetBrakeTorque(0, i);
-	}
+	BrakeTorque = 0.0f;
 }
-
 
 void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed)
 {
 	FVector TankForward = GetOwner()->GetActorForwardVector().GetSafeNormal();
 	FVector AIForwardIntention = MoveVelocity.GetSafeNormal();
 
-	float ForwardTorque = FVector::DotProduct(TankForward, AIForwardIntention);
-	float RightTorque = FVector::CrossProduct(TankForward, AIForwardIntention).Z;
+	ForwardTorque = FVector::DotProduct(TankForward, AIForwardIntention);
+	RightTorque = FVector::CrossProduct(TankForward, AIForwardIntention).Z;
+
+	UE_LOG(LogTemp, Warning, TEXT("%f"), RightTorque);
 
 	IntendDriveForward(ForwardTorque);
 	IntendSteerRight(RightTorque);

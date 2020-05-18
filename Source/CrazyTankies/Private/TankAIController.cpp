@@ -73,8 +73,6 @@ void ATankAIController::Tick(float DeltaTime)
 	{
 		AimingComponent->AimAt(PlayerTank->GetActorLocation());
 
-		UE_LOG(LogTemp, Warning, TEXT("%d"), AimingComponent->GetAimingState());
-
 		if (AimingComponent->GetAimingState() == EAimingState::Locked)
 			Barrel->FireProjectile();
 	}
